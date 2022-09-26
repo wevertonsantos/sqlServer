@@ -1,0 +1,43 @@
+/* Condição de restrição dos registros 
+
+WHERE = Onde [CODIGO DO PRODUTO]
+é '1000889'
+
+*/
+
+SELECT * FROM	[TABELA DE PRODUTOS]
+WHERE			[CODIGO DO PRODUTO] = '1000889'
+
+SELECT * FROM	[TABELA DE PRODUTOS]
+WHERE			[SABOR] = 'Uva'
+
+/*
+
+Filtrando usando maior, menor, diferente ------
+
+= : Iguais a 4.555
+> : Maior que 4.555
+< : Menor do que 10
+>= : Maior igual 4.555
+<= : Menor igual 4.555
+
+*/
+
+
+SELECT * FROM	[TABELA DE PRODUTOS]
+WHERE			[PREÇO DE LISTA] = 4.555
+
+SELECT * FROM	[TABELA DE PRODUTOS]
+WHERE			[PREÇO DE LISTA] > 4.555
+
+SELECT * FROM	[TABELA DE PRODUTOS]
+WHERE			[PREÇO DE LISTA] > 10
+
+SELECT * FROM	[TABELA DE PRODUTOS]
+WHERE			[PREÇO DE LISTA] < 10
+
+SELECT * FROM	[TABELA DE PRODUTOS]
+WHERE			[PREÇO DE LISTA] < 4.555
+
+SELECT * FROM	[TABELA DE PRODUTOS]
+WHERE			[PREÇO DE LISTA] <= 4.555
