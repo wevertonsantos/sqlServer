@@ -1,0 +1,41 @@
+
+SELECT * from [PRODUTOS] WHERE SUBSTRING([DESCRITOR],1,15) = 'Sabor dos Alpes'
+
+DELETE		
+FROM		PRODUTOS
+WHERE		CÓDIGO	=	'100100'
+
+SELECT		*
+FROM		PRODUTOS
+WHERE		TAMANHO	=	'1 Litro'
+AND			SUBSTRING([DESCRITOR],1,15) = 'Sabor dos Alpes'
+
+DELETE		
+FROM		PRODUTOS
+WHERE		TAMANHO	=	'1 Litro'
+AND			SUBSTRING([DESCRITOR],1,15) = 'Sabor dos Alpes'
+
+SELECT		[CODIGO DO PRODUTO]
+FROM		[SUCOS_VENDAS].[DBO].[TABELA DE PRODUTOS]
+
+-- Deletar todo mundo que existe na tabela produtos destino
+-- mas não existe na tabela produtos fonte
+
+DELETE		
+FROM		PRODUTOS
+WHERE		[CÓDIGO] NOT IN (
+							SELECT	[CODIGO DO PRODUTO]
+							FROM	[SUCOS_VENDAS].[DBO].[TABELA DE PRODUTOS]
+							)
+
+-- Excluindo notas
+
+DELETE		A
+FROM		NOTAS A
+INNER JOIN	CLIENTES B
+ON			A.CPF = B.CPF
+WHERE		IDADE < 18
+
+SELECT		CPF
+FROM		CLIENTES
+WHERE		IDADE < 18
