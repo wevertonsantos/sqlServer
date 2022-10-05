@@ -1,6 +1,7 @@
 
 -- Declaração de variáveis
 
+
 DECLARE @IDADE	INT
 DECLARE	@NOME	VARCHAR(200)
 DECLARE	@DATA	DATE
