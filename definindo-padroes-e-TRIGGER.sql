@@ -19,6 +19,18 @@ VALUES
 SELECT	*
 FROM	TAB_PADRAO
 
+-- Usando CHECK para testar campos
+
+CREATE TABLE	TAB_CHECK
+(
+ ID		INT	NOT NULL
+,NOME	VARCHAR(20) NULL
+,IDADE	INT NULL
+,CIDADE	VARCHAR(20)	NULL
+,CONSTRAINT CHK_PESSOA
+ CHECK		(IDADE >= 18)
+)
+
 -- TRIGGER
 
 -- Armazenando o faturamento a cada inserção, atualização e deleção na tabela
