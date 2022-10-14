@@ -113,3 +113,79 @@ BEGIN
 END
 
 EXEC	AtualizaImposto @MES = '02', @ANO = '2017', @ALIQUOTA = 0.16, @TIPO_PRODUTO = 'Lata'
+
+-- SP de sistema 
+
+Todas as características das colunas
+EXEC sp_columns @table_name = 'TABELA DE CLIENTES', @table_owner = 'dbo'
+
+Todas as características das tabelas
+EXEC sp_tables @table_name	= 'TAB%', @table_owner = 'dbo', @table_qualifier = 'SUCOS_VENDAS'
+
+-- SPs com interface - Entrada escalar
+
+CREATE PROCEDURE	BuscaNotasCliente
+ @CPF			AS	VARCHAR(12)
+,@DATAINICIAL	AS	DATETIME	=	'20160101'
+,@DATAFINAL		AS	DATETIME	=	'20161231'
+AS
+BEGIN
+SELECT		*
+FROM		[NOTAS FISCAIS]
+WHERE		CPF		=	@CPF
+AND			[DATA]	>=	@DATAINICIAL
+AND			[DATA]	<=	@DATAFINAL
+END
+
+EXEC		BuscaNotasCliente	@CPF = '19290992743'
+EXEC		BuscaNotasCliente	@CPF = '19290992743', @DATAINICIAL = '20161201'
+EXEC		BuscaNotasCliente	@CPF = '19290992743', @DATAFINAL = '20160131'
+EXEC		BuscaNotasCliente	'19290992743'
+EXEC		BuscaNotasCliente	'19290992743', '20162301'
+EXEC		BuscaNotasCliente	'19290992743', DEFAULT, '20162301'
+
+-- SPs com interface - Entrada tabela
+
+SELECT		TC.CPF, TC.NOME, SUM(INF.QUANTIDADE * INF.PREÇO) FATURAMENTO
+FROM		[NOTAS FISCAIS]			NF
+INNER JOIN	[ITENS NOTAS FISCAIS]	INF
+ON			INF.NUMERO = NF.NUMERO
+INNER JOIN	[TABELA DE CLIENTES]	TC
+ON			TC.CPF = NF.CPF
+AND			YEAR(NF.[DATA]) = 2016
+GROUP BY	TC.CPF, TC.NOME
+
+-- Criando lista de clientes
+
+CREATE TYPE	ListaClientes AS TABLE
+(CPF VARCHAR(12) NOT NULL)
+
+-- Variável tipo lista, inserir os CPF e rodar o SELECT
+-- só trazendo o faturamento dos três CPFs
+
+DECLARE	@Lista AS ListaClientes
+INSERT	INTO	@Lista (CPF)
+VALUES
+(
+ '8502682733'
+)
+,
+(
+'8719655770'
+)
+,
+(
+'9283760794'
+)
+SELECT		TC.CPF, TC.NOME, SUM(INF.QUANTIDADE * INF.PREÇO) FATURAMENTO
+FROM		[NOTAS FISCAIS]			NF
+INNER JOIN	[ITENS NOTAS FISCAIS]	INF
+ON			INF.NUMERO = NF.NUMERO
+INNER JOIN	[TABELA DE CLIENTES]	TC
+ON			TC.CPF = NF.CPF
+AND			YEAR(NF.[DATA]) = 2016
+INNER JOIN	@Lista LT
+ON			LT.CPF = TC.CPF
+GROUP BY	TC.CPF, TC.NOME
+
+-- Criando a stored procedure a lista de clientes e retorna o faturamento
