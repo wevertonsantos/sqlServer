@@ -189,3 +189,56 @@ ON			LT.CPF = TC.CPF
 GROUP BY	TC.CPF, TC.NOME
 
 -- Criando a stored procedure a lista de clientes e retorna o faturamento
+
+CREATE PROCEDURE	FaturamentoClientes2016
+@LISTA AS ListaClientes READONLY
+AS
+SELECT		TC.CPF, TC.NOME, SUM(INF.QUANTIDADE * INF.PREÇO) FATURAMENTO
+FROM		[NOTAS FISCAIS]			NF
+INNER JOIN	[ITENS NOTAS FISCAIS]	INF
+ON			INF.NUMERO = NF.NUMERO
+INNER JOIN	[TABELA DE CLIENTES]	TC
+ON			TC.CPF = NF.CPF
+AND			YEAR(NF.[DATA]) = 2016
+INNER JOIN	@LISTA LT
+ON			LT.CPF = TC.CPF
+GROUP BY	TC.CPF, TC.NOME
+
+-- Passando CPF na SP
+
+DECLARE	@Lista AS ListaClientes
+INSERT	INTO	@Lista (CPF)
+VALUES
+(
+ '8502682733'
+)
+,
+(
+'5840119709'
+)
+,
+(
+'7771579779'
+)
+EXEC	FaturamentoClientes2016 @LISTA = @Lista
+
+-- Lista de números de notas passando uma tabela como parâmetro
+
+CREATE TYPE	ListaDatasT AS TABLE
+(DATA DATE NOT NULL)
+
+CREATE	PROCEDURE	ListaNumeroNotas
+@ListaDatas AS ListaDatasT READONLY
+AS
+SELECT		DATA, COUNT(*) AS NUMERO
+FROM		[NOTAS FISCAIS] NF
+WHERE		DATA IN	(SELECT DATA FROM @ListaDatas)
+GROUP BY	DATA
+
+DECLARE			@ListaDatas	AS ListaDatasT
+INSERT	INTO	@ListaDatas (DATA)
+VALUES
+ ('20160101')
+,('20161231')
+,('20160131')
+EXEC		ListaNumeroNotas @ListaDatas = @ListaDatas
